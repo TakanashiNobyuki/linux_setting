@@ -1,3 +1,3 @@
-linux_setup
+linux_setting
 
-Ver. XXX
+Ver 1.1 
