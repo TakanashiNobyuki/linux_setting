@@ -1,0 +1,39 @@
+---
+- name: Modify hostname
+  hostname: 
+    name: '{{ host_name }}'
+
+- name: Modify root password
+  user:
+    name: "root"
+    password: "{{ host_password | password_hash('sha512') }}"
+
+- name: Add /etc/hosts myself
+  lineinfile:
+    dest: '/etc/hosts'
+    line: "{{ host_ip }}     {{ host_name }} "
+
+- name: Set locale
+  command: localectl set-locale LANG=en_US.UTF-8
+
+- name: Set timezone 
+  timezone:
+    name: "{{ timezone }}"
+
+- name: Setup ntp setting
+  copy:
+    src: files/{{ region_path }}/chrony.conf
+    dest: /etc/chrony.conf
+    owner: root
+    group: root
+    mode: '0644' 
+    backup: yes
+
+- name: Restart chronyd
+  systemd:
+    name: chronyd
+    state: restarted
+
+- name: Exec cofirmation shellscript
+  script: os_setting_confirmation.sh
+
