@@ -1,5 +1,4 @@
 #!/bin/bash -u
-SCRIPT_DIR=$( cd $( dirname $0 ) && pwd )
 
 IP=$(hostname -i)
 
@@ -27,6 +26,8 @@ echo -n -e "\n"
 
 echo "##### Disk Mount Setting ####################################"
 df -h |grep File
+df -ah |grep /dev/nvme
+df -ah |grep /dev/xvd
 df -ah |grep /dev/mapper
 echo -n -e "\n"
 
