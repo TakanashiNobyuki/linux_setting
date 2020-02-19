@@ -1,14 +1,7 @@
 ---
-# Check before setup 
+# Check before setup  
 - name: Checking before setup linux Server
-  stat: 
-    path: /YMSL_WORK/ExsistanceChecking
-  register: check_file
-
-- name: Result of checking before setup linux Server
-  fail:
-    msg: "TARGET SERVER IS EXISTING!! JOB WAS CANCELLED!!"
-  when: check_file.stat.exists == false
+  import_tasks: linux_server_exists_check.yml
 
 
 # Start linux-server setup tasks
@@ -69,17 +62,17 @@
     name: chronyd
     state: restarted
 
-- name: Reboot for test
-  reboot:
-    msg: "Reboot testing now. Please wait until started the Server."
-
 - name: Delete checking file(ExsistanceChecking)
   file:
     path: /YMSL_WORK/ExsistanceChecking
     state: absent
 
+- name: Reboot for test
+  reboot:
+    msg: "Reboot testing now. Please wait until started the Server."
 
-# Checking after setup 
+
+      # Checking after reboot
 - name: Check chronyd status
   systemd:
     name: chronyd

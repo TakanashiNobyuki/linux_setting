@@ -1,0 +1,10 @@
+---
+- name: Checking before setup linux Server                                                                   
+  stat: 
+    path: /YMSL_WORK/ExsistanceChecking
+  register: check_file
+
+- name: Result of checking before setup linux Server
+  fail:
+    msg: "TARGET SERVER IS EXISTING!! JOB WAS CANCELLED!!"
+  when: check_file.stat.exists == false
