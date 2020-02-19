@@ -1,4 +1,5 @@
 ---
+# Check before setup 
 - name: Checking before setup linux Server
   stat: 
     path: /YMSL_WORK/ExsistanceChecking
@@ -9,6 +10,8 @@
     msg: "TARGET SERVER IS EXISTING!! JOB WAS CANCELLED!!"
   when: check_file.stat.exists == false
 
+
+# Start linux-server setup tasks
 - name: Modify hostname
   hostname: 
     name: "{{ host_name }}"
@@ -70,16 +73,17 @@
   reboot:
     msg: "Reboot testing now. Please wait until started the Server."
 
-# Checking after reboot
-- name: Check chronyd status
-  systemd:
-    name: chronyd
-    state: started 
-
 - name: Delete checking file(ExsistanceChecking)
   file:
     path: /YMSL_WORK/ExsistanceChecking
     state: absent
+
+
+# Checking after setup 
+- name: Check chronyd status
+  systemd:
+    name: chronyd
+    state: started 
 
 - name: Exec cofirmation shellscript
   script: os_setting_confirmation.sh
