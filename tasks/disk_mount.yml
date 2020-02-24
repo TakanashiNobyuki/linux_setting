@@ -41,13 +41,13 @@
 
 - name: make mount point
   file: 
-    path: "{{ mountpoint }}" 
+    path: "{{ disk_param[1].mountpoint }}" 
     state: directory
 
 - name: mount disk
   mount: 
-    src: "{{ devicename }}" 
+    src: "/dev/{{ disk_param[1].vg }}/{{ disk_param[1].lv }}" 
     fstype: xfs 
-    path: "{{ mountpoint }}"
+    path: "{{ disk_param[1].mountpoint }}"
     opts: defaults 
     state: mounted

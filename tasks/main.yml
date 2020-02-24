@@ -81,23 +81,22 @@
     loop_var: disk_param
   when: disk_params is defined
 
-#- name: Delete checking file(ExsistanceChecking)
-#  file:
-#    path: /YMSL_WORK/ExsistanceChecking
-#    state: absent
-#
-#- name: Reboot for test
-#  reboot:
-#    msg: "Reboot testing now. Please wait until started the Server."
-#
-#
-## Checking after reboot
-#- name: Check chronyd status
-#  systemd:
-#    name: chronyd
-#    state: started 
-#
-#- name: Exec cofirmation shellscript
-#  script: os_setting_confirmation.sh
+- name: Reboot for test
+  reboot:
+    msg: "Reboot testing now. Please wait until started the Server."
 
+
+# Checking after reboot
+- name: Check chronyd status
+  systemd:
+    name: chronyd
+    state: started 
+
+- name: Exec cofirmation shellscript
+  script: os_setting_confirmation.sh
+
+- name: Delete checking file(ExsistanceChecking)
+  file:
+    path: /YMSL_WORK/ExsistanceChecking
+    state: absent
 
