@@ -1,5 +1,9 @@
 ---
 # Check before setup  
+- name: pause
+  pause:
+    seconds: 30
+
 - name: Checking before setup linux Server
   import_tasks: linux_server_exists_check.yml
 
@@ -50,35 +54,50 @@
     mode: "0644" 
     backup: yes
 
-- name: Setup NTP 
+- name: Setup NTP without Yokohama
   lineinfile:
     dest: "/etc/chrony.conf"
-    line: "{{ item }}"
-  with_items:
-    - "server {{ ntp_server}} iburst"
+    line: "server {{ ntp_server }} iburst"
+  when: region_path != "Yokohama"
+
+- name: Setup NTP for Yokohama
+  lineinfile: 
+    dest: "/etc/chrony.conf"
+    line: "{{ item }}"  
+  with_items: 
+      - "server {{ ntp_server1 }} iburst"
+      - "server {{ ntp_server2 }} iburst"
+  when: region_path == "Yokohama"
 
 - name: Restart chronyd
   systemd:
     name: chronyd
     state: restarted
 
-- name: Delete checking file(ExsistanceChecking)
-  file:
-    path: /YMSL_WORK/ExsistanceChecking
-    state: absent
+- name: Mount disk
+  include_tasks: disk_mount.yml
+  with_indexed_items: "{{ disk_params }}"
+  loop_control:
+    loop_var: disk_param
+  when: disk_params is defined
 
-- name: Reboot for test
-  reboot:
-    msg: "Reboot testing now. Please wait until started the Server."
-
-
-      # Checking after reboot
-- name: Check chronyd status
-  systemd:
-    name: chronyd
-    state: started 
-
-- name: Exec cofirmation shellscript
-  script: os_setting_confirmation.sh
+#- name: Delete checking file(ExsistanceChecking)
+#  file:
+#    path: /YMSL_WORK/ExsistanceChecking
+#    state: absent
+#
+#- name: Reboot for test
+#  reboot:
+#    msg: "Reboot testing now. Please wait until started the Server."
+#
+#
+## Checking after reboot
+#- name: Check chronyd status
+#  systemd:
+#    name: chronyd
+#    state: started 
+#
+#- name: Exec cofirmation shellscript
+#  script: os_setting_confirmation.sh
 
 
