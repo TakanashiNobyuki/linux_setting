@@ -1,9 +1,5 @@
 ---
 # Check before setup  
-- name: pause
-  pause:
-    seconds: 30
-
 - name: Checking before setup linux Server
   import_tasks: linux_server_exists_check.yml
 
@@ -36,6 +32,11 @@
     - "{{ mail_server }} po mailhost po.{{ mail_domain }}"
     - " "
     - "{{ host_ip }} {{ host_name }} {{ host_name }}.{{ mail_domain }} "
+
+- name: Create application user directory
+  file: 
+    path: /home/app
+    state: directory    
 
 - name: Set locale
   command: localectl set-locale LANG=en_US.UTF-8
@@ -81,7 +82,7 @@
     loop_var: disk_param
   when: disk_params is defined
 
-- name: Reboot for test
+- name: Reboot test
   reboot:
     msg: "Reboot testing now. Please wait until started the Server."
 
