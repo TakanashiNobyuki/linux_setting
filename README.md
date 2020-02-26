@@ -1,3 +1,3 @@
 linux_setting
 
-Ver 1.1 
+Ver 1.0
