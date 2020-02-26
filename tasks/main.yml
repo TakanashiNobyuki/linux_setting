@@ -1,6 +1,6 @@
 ---
 # Check before setup  
-- name: Checking before setup linux Server
+- name: Check before setup linux Server
   import_tasks: linux_server_exists_check.yml
 
 
@@ -76,7 +76,7 @@
     state: restarted
 
 - name: Mount disk
-  include_tasks: disk_mount.yml
+  include_tasks: mount_disk.yml
   with_indexed_items: "{{ disk_params }}"
   loop_control:
     loop_var: disk_param

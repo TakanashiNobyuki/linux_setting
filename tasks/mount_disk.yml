@@ -2,29 +2,33 @@
 - name: set unit number
   set_fact: unit_number={{ disk_param.0 | int + 1 }}
 
-- name: fdisk device
+- name: Check before add disk 
+  shell: fdisk -l |grep "{{ disk_params[1].device }}1"
+  ignore_errors: true 
+  register: check_disk
+
+- name: Result of checking before setup linux Server
+  fail:
+    msg: "TARGET SERVER HAS DISK PARTITION!! JOB WAS CANCELLED!!"
+  when: check_disk.rc == 0
+
+- name: Create partition by fdisk
   parted: 
     device : "{{ disk_param[1].device }}"
     number: 1
     state: present
     flags: ["lvm"]
 
-- name: check pv
-  shell: pvdisplay | grep "{{ disk_param[1].device }}1"
-  register: pv_exists
-  ignore_errors: true
-
-- name: create PV
+- name: Create physical volume (PV)
   shell: pvcreate "{{ disk_param[1].device }}1" 
-  when: pv_exists.rc == 1
 
-- name: create VG
+- name: Create volume group (VG)
   lvg:
     pvs: "{{ disk_param[1].device }}1" 
     vg: "{{ disk_param[1].vg }}"
     state: present
 
-- name: Create lvm 
+- name: Create logical volume (LV)
   lvol: 
     vg: "{{ disk_param[1].vg }}"
     lv: "{{ disk_param[1].lv }}"
