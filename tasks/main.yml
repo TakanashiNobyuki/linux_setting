@@ -98,6 +98,6 @@
 
 - name: Delete checking file(ExsistanceChecking)
   file:
-    path: /YMSL_WORK/ExsistanceChecking
+    path: /YMSL_WORK/ExistenceChecking
     state: absent
 
