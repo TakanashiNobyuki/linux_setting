@@ -92,7 +92,7 @@
 
 
 ##################################################
-# Checking after reboot
+# Check after reboot
 ##################################################
 - name: Check chronyd status
   systemd:
