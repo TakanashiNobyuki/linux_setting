@@ -1,10 +1,14 @@
 ---
+##################################################
 # Check before setup  
+##################################################
 - name: Check before setup linux Server
   import_tasks: linux_server_exists_check.yml
 
 
+##################################################
 # Start linux-server setup tasks
+##################################################
 - name: Modify hostname
   hostname: 
     name: "{{ host_name }}"
@@ -87,7 +91,9 @@
     msg: "Reboot testing now. Please wait until started the Server."
 
 
+##################################################
 # Checking after reboot
+##################################################
 - name: Check chronyd status
   systemd:
     name: chronyd

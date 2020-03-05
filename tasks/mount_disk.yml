@@ -51,3 +51,4 @@
     path: "{{ disk_param[1].mountpoint }}"
     opts: defaults 
     state: mounted
+
