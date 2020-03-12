@@ -1,5 +1,5 @@
 ---
-- name: Checking before setup linux Server                                                                   
+- name: Checking before setup linux Server         
   stat: 
     path: /YMSL_WORK/ExistenceChecking
   register: check_file

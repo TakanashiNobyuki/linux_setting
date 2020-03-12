@@ -3,8 +3,10 @@
   set_fact: unit_number={{ disk_param.0 | int + 1 }}
 
 - name: Check before add disk 
-  shell: fdisk -l |grep "{{ disk_params[1].device }}1"
   ignore_errors: true 
+  shell: fdisk -l |grep "{{ disk_param[1].device }}1"
+  args:
+    executable: /bin/bash
   register: check_disk
 
 - name: Result of checking before setup linux Server
