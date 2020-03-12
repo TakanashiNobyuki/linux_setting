@@ -1,4 +1,20 @@
 ---
+
+##################################################
+# Description
+#------------------------------------------------- 
+#
+#  parameters
+#    disk_param
+#      size       : disk size
+#      device     : device name
+#      mountpoint : mount point 
+#      vg         : VG name
+#      lv         : LV name
+#
+##################################################
+
+
 - name: set unit number
   set_fact: unit_number={{ disk_param.0 | int + 1 }}
 
@@ -9,12 +25,12 @@
     executable: /bin/bash
   register: check_disk
 
-- name: Result of checking before setup linux Server
+- name: Checking result before setup linux Server
   fail:
     msg: "TARGET SERVER HAS DISK PARTITION!! JOB WAS CANCELLED!!"
   when: check_disk.rc == 0
 
-- name: Create partition by fdisk
+- name: Create partition by fdisk command
   parted: 
     device : "{{ disk_param[1].device }}"
     number: 1
@@ -36,21 +52,22 @@
     lv: "{{ disk_param[1].lv }}"
     size: 100%FREE
 
-- name: make file system (xfs)
+- name: Make file system (xfs)
   filesystem: 
     fstype: xfs 
     dev: "/dev/{{ disk_param[1].vg }}/{{ disk_param[1].lv }}"
 
-- name: make mount point
+- name: Make mount point
   file: 
     path: "{{ disk_param[1].mountpoint }}" 
     state: directory
 
-- name: mount disk
+- name: Mount disk
   mount: 
     src: "/dev/{{ disk_param[1].vg }}/{{ disk_param[1].lv }}" 
     fstype: xfs 
     path: "{{ disk_param[1].mountpoint }}"
     opts: defaults 
     state: mounted
+
 

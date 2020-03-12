@@ -1,4 +1,20 @@
 ---
+
+##################################################
+# Description
+#-------------------------------------------------
+#
+#  host_name     : host name
+#  host_password : root password
+#  mail_server   : mail server IP address
+#  mail_domain   : mail server domain name
+#  timezone_name : timezone
+#  ntp_server    : ntp server IP address
+#  disk_params   : parameters for add disk 
+#
+##################################################
+
+
 ##################################################
 # Check before setup  
 ##################################################
@@ -26,7 +42,7 @@
     group: root
     mode: "0644"
 
-- name: Add SMTP and myself to /etc/hosts
+- name: Add SMTP server and myself to /etc/hosts
   lineinfile:
     dest: "/etc/hosts"
     line: "{{ item }}"
@@ -37,7 +53,7 @@
     - " "
     - "{{ host_ip }} {{ host_name }} {{ host_name }}.{{ mail_domain }} "
 
-- name: Create application user directory
+- name: Create /home/app directory
   file: 
     path: /home/app
     state: directory    
